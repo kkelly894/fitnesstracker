@@ -35,3 +35,35 @@ export async function createActivity(token, activity) {
     throw Error(result.message);
   }
 }
+
+/* delete function 
+i had to read about the difference in throw error & trycatch here, seeing their use of throw vs our typical use of try/catch */
+export async function deleteActivity(token, activityId) {
+  try {
+    if (!token) {
+      throw Error("You must be signed in to delete an activity.");
+    }
+
+    const response = await fetch(API + "/activities/" + activityId, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    if (!response.ok) {
+      let errorMessage = "There was an error deleting this activity.";
+
+      try {
+        const result = await response.json();
+        errorMessage = result.message;
+      } catch (error) {
+        console.error(error);
+      }
+
+      throw Error(errorMessage);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
