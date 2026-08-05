@@ -1,43 +1,13 @@
-import { useState } from "react";
-import { useAuth } from "../auth/AuthContext";
-import { deleteActivity } from "../api/activities";
+import { NavLink } from "react-router";
 
-export default function ActivityList({ activities, syncActivities }) {
-  const { token } = useAuth();
-
-  const [deleteError, setDeleteError] = useState(null);
-
-  async function handleDelete(activityId) {
-    try {
-      setDeleteError(null);
-
-      await deleteActivity(token, activityId);
-
-      await syncActivities();
-    } catch (error) {
-      setDeleteError(error.message);
-    }
-  }
-
+export default function ActivityList({ activities }) {
   return (
-    <>
-      {deleteError && <p role="alert">{deleteError}</p>}
-
-      <ul>
-        {activities.map((activity) => {
-          const activityId = activity.id;
-
-          return (
-            <li key={activityId}>
-              {activity.name}
-
-              {token && (
-                <button onClick={() => handleDelete(activityId)}>Delete</button>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </>
+    <ul>
+      {activities.map((activity) => (
+        <li key={activity.id}>
+          <NavLink to={"/activities/" + activity.id}>{activity.name}</NavLink>
+        </li>
+      ))}
+    </ul>
   );
 }

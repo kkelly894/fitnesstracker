@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
-import { getActivities } from "../api/activities";
+import { useEffect, useState } from "react";
 
+import { getActivities } from "../api/activities";
 import ActivityList from "./ActivityList";
 import ActivityForm from "./ActivityForm";
 
 export default function ActivitiesPage() {
   const [activities, setActivities] = useState([]);
 
-  const syncActivities = async () => {
+  async function syncActivities() {
     const data = await getActivities();
+
     setActivities(data);
-  };
+  }
 
   useEffect(() => {
     syncActivities();
@@ -19,7 +20,9 @@ export default function ActivitiesPage() {
   return (
     <>
       <h1>Activities</h1>
-      <ActivityList activities={activities} syncActivities={syncActivities} />
+
+      <ActivityList activities={activities} />
+
       <ActivityForm syncActivities={syncActivities} />
     </>
   );
